@@ -1,11 +1,1302 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Zhao KaiMing's Personal Page</title>
-  </head>
-  <h1>ZhaoKaiMing's Pages</h1>
-  <ul>
-    <li><a href="https://www.mcmod.cn">mcmod</a></li>
-    <li><a href="https://space.bilibili.com/475763948?spm_id_from=333.1007.0.0">bilibili</a></li>
-  </ul>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>现代网站示例</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <!-- Tailwind CSS 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-custom {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 全局样式 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 动画关键帧 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        
+        /* 进度条动画 */
+        @keyframes progress {
+            from { width: 0; }
+            to { width: var(--progress-width); }
+        }
+        
+        .progress-bar {
+            animation: progress 1.2s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 text-gray-800 overflow-x-hidden">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/90 backdrop-blur-sm shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                        <span class="text-white font-bold text-xl">M</span>
+                    </div>
+                    <span class="text-xl font-bold text-dark">ModernUI</span>
+                </a>
+                
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 hover:text-primary transition-custom font-medium">首页</a>
+                    <a href="#features" class="text-gray-700 hover:text-primary transition-custom font-medium">特性</a>
+                    <a href="#stats" class="text-gray-700 hover:text-primary transition-custom font-medium">数据</a>
+                    <a href="#pricing" class="text-gray-700 hover:text-primary transition-custom font-medium">价格</a>
+                    <a href="#contact" class="text-gray-700 hover:text-primary transition-custom font-medium">联系我们</a>
+                </nav>
+                
+                <!-- 登录/注册按钮 -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#" class="px-4 py-2 text-primary hover:text-primary/80 transition-custom font-medium">登录</a>
+                    <a href="#" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium shadow-md hover:shadow-lg">注册</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menu-toggle" class="md:hidden text-gray-700 focus:outline-none">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="#home" class="block py-2 text-gray-700 hover:text-primary transition-custom font-medium">首页</a>
+                <a href="#features" class="block py-2 text-gray-700 hover:text-primary transition-custom font-medium">特性</a>
+                <a href="#stats" class="block py-2 text-gray-700 hover:text-primary transition-custom font-medium">数据</a>
+                <a href="#pricing" class="block py-2 text-gray-700 hover:text-primary transition-custom font-medium">价格</a>
+                <a href="#contact" class="block py-2 text-gray-700 hover:text-primary transition-custom font-medium">联系我们</a>
+                <div class="flex flex-col space-y-3 pt-2 border-t">
+                    <a href="#" class="px-4 py-2 text-center text-primary hover:text-primary/80 transition-custom font-medium">登录</a>
+                    <a href="#" class="px-4 py-2 text-center bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium shadow-md">注册</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section id="home" class="pt-32 pb-20 md:pt-40 md:pb-28 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="w-full lg:w-1/2 mb-12 lg:mb-0">
+                    <div class="animate-fade-in">
+                        <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-6">全新体验 · 智能解决方案</span>
+                        <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight text-dark mb-6">
+                            重新定义<br>
+                            <span class="text-primary">现代</span> 网站体验
+                        </h1>
+                        <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                            我们提供全方位的网站解决方案，从设计到开发，从优化到维护，让您的在线存在脱颖而出。
+                        </p>
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <a href="#contact" class="px-8 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium shadow-lg hover:shadow-xl text-center">
+                                立即开始 <i class="fa fa-arrow-right ml-2"></i>
+                            </a>
+                            <a href="#" class="px-8 py-3 bg-white text-gray-800 rounded-lg hover:bg-gray-50 transition-custom font-medium shadow-md hover:shadow-lg flex items-center justify-center">
+                                <i class="fa fa-play-circle mr-2 text-primary"></i> 观看演示
+                            </a>
+                        </div>
+                        <div class="mt-10 flex items-center">
+                            <div class="flex -space-x-2">
+                                <img src="https://picsum.photos/id/1001/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                                <img src="https://picsum.photos/id/1002/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                                <img src="https://picsum.photos/id/1003/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                                <img src="https://picsum.photos/id/1004/100/100" alt="用户头像" class="w-10 h-10 rounded-full border-2 border-white">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-sm font-medium text-gray-600">
+                                    99+
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <div class="flex items-center">
+                                    <div class="flex">
+                                        <i class="fa fa-star text-yellow-400"></i>
+                                        <i class="fa fa-star text-yellow-400"></i>
+                                        <i class="fa fa-star text-yellow-400"></i>
+                                        <i class="fa fa-star text-yellow-400"></i>
+                                        <i class="fa fa-star text-yellow-400"></i>
+                                    </div>
+                                    <span class="ml-2 font-medium">4.9/5</span>
+                                </div>
+                                <p class="text-sm text-gray-600">来自超过1000+满意客户</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 relative">
+                    <div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl animate-fade-in delay-200">
+                        <img src="https://picsum.photos/id/1/600/400" alt="现代网站展示" class="w-full h-auto">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6 text-white">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                <span class="text-sm font-medium">实时监控中</span>
+                            </div>
+                            <h3 class="text-xl font-bold">智能分析仪表盘</h3>
+                            <p class="text-sm text-gray-200">全面了解您的业务数据</p>
+                        </div>
+                    </div>
+                    <!-- 装饰元素 -->
+                    <div class="absolute top-1/4 -right-10 w-40 h-40 bg-accent/20 rounded-full filter blur-3xl"></div>
+                    <div class="absolute bottom-1/3 -left-10 w-40 h-40 bg-primary/20 rounded-full filter blur-3xl"></div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary/20 rounded-full filter blur-2xl"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 波浪装饰 -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-16 md:h-24 text-white fill-current">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 合作伙伴 -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 text-sm uppercase tracking-wider mb-8">值得信赖的合作伙伴</p>
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70">
+                <div class="grayscale hover:grayscale-0 transition-custom">
+                    <i class="fa fa-google text-4xl text-gray-400"></i>
+                </div>
+                <div class="grayscale hover:grayscale-0 transition-custom">
+                    <i class="fa fa-microsoft text-4xl text-gray-400"></i>
+                </div>
+                <div class="grayscale hover:grayscale-0 transition-custom">
+                    <i class="fa fa-apple text-4xl text-gray-400"></i>
+                </div>
+                <div class="grayscale hover:grayscale-0 transition-custom">
+                    <i class="fa fa-spotify text-4xl text-gray-400"></i>
+                </div>
+                <div class="grayscale hover:grayscale-0 transition-custom">
+                    <i class="fa fa-slack text-4xl text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特性部分 -->
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">核心特性</span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                    为您的业务提供强大功能
+                </h2>
+                <p class="text-lg text-gray-600">
+                    我们的平台集成了多种先进功能，帮助您高效管理业务，提升用户体验，实现业务增长。
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 特性卡片 1 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-custom">
+                        <i class="fa fa-bolt text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">闪电般的速度</h3>
+                    <p class="text-gray-600 mb-4">
+                        优化的代码和资源加载策略，确保您的网站在任何设备上都能快速加载，提升用户体验和SEO排名。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-primary font-medium hover:text-primary/80 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <!-- 特性卡片 2 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-secondary/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-secondary/20 transition-custom">
+                        <i class="fa fa-mobile text-secondary text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">全响应式设计</h3>
+                    <p class="text-gray-600 mb-4">
+                        从手机到桌面设备，完美适配各种屏幕尺寸，确保用户在任何设备上都能获得一致的优质体验。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-secondary font-medium hover:text-secondary/80 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <!-- 特性卡片 3 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-accent/10 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-custom">
+                        <i class="fa fa-shield text-accent text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">高级安全保障</h3>
+                    <p class="text-gray-600 mb-4">
+                        内置多重安全防护措施，保护您的网站和用户数据安全，防止恶意攻击和数据泄露。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-accent font-medium hover:text-accent/80 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <!-- 特性卡片 4 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-orange-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-orange-200 transition-custom">
+                        <i class="fa fa-bar-chart text-orange-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">数据分析工具</h3>
+                    <p class="text-gray-600 mb-4">
+                        集成强大的数据分析功能，实时监控网站性能和用户行为，帮助您做出数据驱动的决策。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-orange-500 font-medium hover:text-orange-600 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <!-- 特性卡片 5 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-red-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-red-200 transition-custom">
+                        <i class="fa fa-cogs text-red-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">灵活定制选项</h3>
+                    <p class="text-gray-600 mb-4">
+                        丰富的定制选项和API接口，让您可以根据业务需求轻松扩展和定制功能，满足独特需求。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-red-500 font-medium hover:text-red-600 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+                
+                <!-- 特性卡片 6 -->
+                <div class="bg-gray-50 rounded-xl p-8 shadow-sm hover:shadow-md transition-custom border border-gray-100 group">
+                    <div class="w-14 h-14 bg-teal-100 rounded-lg flex items-center justify-center mb-6 group-hover:bg-teal-200 transition-custom">
+                        <i class="fa fa-life-ring text-teal-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 text-dark">24/7专业支持</h3>
+                    <p class="text-gray-600 mb-4">
+                        我们的专业支持团队随时待命，为您提供技术支持和解决方案，确保您的网站平稳运行。
+                    </p>
+                    <a href="#" class="inline-flex items-center text-teal-500 font-medium hover:text-teal-600 transition-custom">
+                        了解更多 <i class="fa fa-arrow-right ml-2 text-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 详细特性展示 -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="w-full lg:w-1/2">
+                    <div class="relative">
+                        <div class="rounded-2xl overflow-hidden shadow-xl z-10 relative">
+                            <img src="https://picsum.photos/id/2/600/400" alt="详细功能展示" class="w-full h-auto">
+                        </div>
+                        <!-- 浮动卡片 -->
+                        <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg z-20 max-w-xs hidden md:block">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa fa-line-chart text-green-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-dark">性能提升</h4>
+                                    <p class="text-sm text-gray-600">加载速度提升45%，用户留存率提高28%</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 装饰元素 -->
+                        <div class="absolute top-1/3 -left-8 w-24 h-24 bg-primary/10 rounded-full"></div>
+                        <div class="absolute bottom-1/4 -right-4 w-16 h-16 bg-accent/10 rounded-full"></div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">智能分析</span>
+                    <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                        深入了解您的用户行为
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-8">
+                        我们的智能分析系统能够实时跟踪和分析用户行为数据，为您提供有价值的洞察，帮助您优化产品和服务。
+                    </p>
+                    
+                    <!-- 特性列表 -->
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold mb-1 text-dark">实时用户跟踪</h3>
+                                <p class="text-gray-600">实时监控网站访问量、用户行为路径和停留时间，了解用户兴趣点。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold mb-1 text-dark">转化漏斗分析</h3>
+                                <p class="text-gray-600">直观展示用户从访问到转化的完整路径，识别转化瓶颈并优化。</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                                <i class="fa fa-check text-green-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold mb-1 text-dark">自定义报告</h3>
+                                <p class="text-gray-600">根据业务需求创建自定义报告，自动生成并发送关键指标分析。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 技能进度条 -->
+                    <div class="mt-10 space-y-4">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium text-gray-700">用户参与度</span>
+                                <span class="font-medium text-primary">92%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-primary rounded-full progress-bar" style="--progress-width: 92%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium text-gray-700">转化率</span>
+                                <span class="font-medium text-secondary">78%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary rounded-full progress-bar" style="--progress-width: 78%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium text-gray-700">用户满意度</span>
+                                <span class="font-medium text-accent">85%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-accent rounded-full progress-bar" style="--progress-width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section id="stats" class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">数据统计</span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                    我们的成就
+                </h2>
+                <p class="text-lg text-gray-600">
+                    多年来，我们一直致力于为客户提供最优质的服务，取得了令人瞩目的成绩。
+                </p>
+            </div>
+            
+            <!-- 数据卡片 -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+                <div class="bg-gray-50 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-primary mb-2 counter" data-target="5000">0</div>
+                    <p class="text-gray-600">满意客户</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-secondary mb-2 counter" data-target="12000">0</div>
+                    <p class="text-gray-600">完成项目</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-accent mb-2 counter" data-target="45">0</div>
+                    <p class="text-gray-600">专业团队</p>
+                </div>
+                
+                <div class="bg-gray-50 rounded-xl p-6 text-center">
+                    <div class="text-4xl font-bold text-orange-500 mb-2 counter" data-target="12">0</div>
+                    <p class="text-gray-600">行业经验</p>
+                </div>
+            </div>
+            
+            <!-- 图表 -->
+            <div class="bg-gray-50 rounded-xl p-6 lg:p-8 shadow-sm">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-dark mb-2">业务增长趋势</h3>
+                        <p class="text-gray-600">过去12个月的业务增长数据</p>
+                    </div>
+                    <div class="flex space-x-2 mt-4 md:mt-0">
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">月度</button>
+                        <button class="px-4 py-2 bg-white text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-custom">季度</button>
+                        <button class="px-4 py-2 bg-white text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100 transition-custom">年度</button>
+                    </div>
+                </div>
+                <div class="h-80">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 价格方案 -->
+    <section id="pricing" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">价格方案</span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                    选择适合您的方案
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    我们提供多种灵活的价格方案，满足不同规模企业的需求，所有方案均可免费试用14天。
+                </p>
+                
+                <!-- 价格切换 -->
+                <div class="flex items-center justify-center space-x-4">
+                    <span class="text-gray-600 font-medium">月付</span>
+                    <label class="relative inline-block w-12 h-6">
+                        <input type="checkbox" id="pricing-toggle" class="opacity-0 w-0 h-0">
+                        <span class="absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-colors duration-300 before:absolute before:content-[''] before:h-5 before:w-5 before:left-0.5 before:bottom-0.5 before:bg-white before:rounded-full before:transition-all before:duration-300 checked:bg-primary checked:before:translate-x-6"></span>
+                    </label>
+                    <span class="text-gray-600 font-medium">年付 <span class="text-green-500 text-sm font-bold">省20%</span></span>
+                </div>
+            </div>
+            
+            <!-- 价格卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 基础版 -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-custom overflow-hidden border border-gray-100">
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-dark mb-2">基础版</h3>
+                        <p class="text-gray-600 mb-6">适合个人和小型项目</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-dark price-value" data-monthly="99" data-annual="79">99</span>
+                            <span class="text-gray-600">/月</span>
+                        </div>
+                        <a href="#" class="block w-full py-3 text-center bg-gray-100 text-dark rounded-lg hover:bg-gray-200 transition-custom font-medium mb-8">
+                            选择方案
+                        </a>
+                        
+                        <ul class="space-y-4">
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">最多5个项目</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">10GB 存储空间</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">基础数据分析</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">电子邮件支持</span>
+                            </li>
+                            <li class="flex items-start space-x-3 text-gray-400">
+                                <i class="fa fa-times mt-1"></i>
+                                <span>高级安全功能</span>
+                            </li>
+                            <li class="flex items-start space-x-3 text-gray-400">
+                                <i class="fa fa-times mt-1"></i>
+                                <span>API 访问权限</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 专业版 -->
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-primary relative transform scale-105 z-10">
+                    <div class="absolute top-0 right-0 bg-primary text-white px-4 py-1 text-sm font-medium">
+                        最受欢迎
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-dark mb-2">专业版</h3>
+                        <p class="text-gray-600 mb-6">适合中小企业</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-dark price-value" data-monthly="199" data-annual="159">199</span>
+                            <span class="text-gray-600">/月</span>
+                        </div>
+                        <a href="#" class="block w-full py-3 text-center bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium mb-8 shadow-md">
+                            选择方案
+                        </a>
+                        
+                        <ul class="space-y-4">
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">无限项目</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">100GB 存储空间</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">高级数据分析</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">优先电子邮件和聊天支持</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">高级安全功能</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">API 访问权限</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- 企业版 -->
+                <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-custom overflow-hidden border border-gray-100">
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold text-dark mb-2">企业版</h3>
+                        <p class="text-gray-600 mb-6">适合大型企业</p>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-dark price-value" data-monthly="499" data-annual="399">499</span>
+                            <span class="text-gray-600">/月</span>
+                        </div>
+                        <a href="#" class="block w-full py-3 text-center bg-gray-100 text-dark rounded-lg hover:bg-gray-200 transition-custom font-medium mb-8">
+                            选择方案
+                        </a>
+                        
+                        <ul class="space-y-4">
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">无限项目</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">1TB 存储空间</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">企业级数据分析</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">24/7 专属支持</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">企业级安全防护</span>
+                            </li>
+                            <li class="flex items-start space-x-3">
+                                <i class="fa fa-check text-green-500 mt-1"></i>
+                                <span class="text-gray-600">高级 API 访问和定制开发</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 客户评价 -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">客户评价</span>
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                    客户对我们的评价
+                </h2>
+                <p class="text-lg text-gray-600">
+                    听听我们的客户怎么说，他们的成功故事是我们不断进步的动力。
+                </p>
+            </div>
+            
+            <!-- 评价轮播 -->
+            <div class="relative">
+                <div id="testimonials-container" class="overflow-hidden">
+                    <div id="testimonials-slider" class="flex transition-transform duration-500 ease-out">
+                        <!-- 评价 1 -->
+                        <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+                            <div class="bg-gray-50 rounded-xl p-8 h-full">
+                                <div class="flex text-yellow-400 mb-4">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 mb-6 italic">
+                                    "使用这个平台后，我们的网站加载速度提升了50%，用户体验明显改善，转化率也有了显著提高。团队的技术支持非常专业，总能及时解决我们的问题。"
+                                </p>
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1010/100/100" alt="客户头像" class="w-12 h-12 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-bold text-dark">张明</h4>
+                                        <p class="text-sm text-gray-500">某科技公司 CEO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评价 2 -->
+                        <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+                            <div class="bg-gray-50 rounded-xl p-8 h-full">
+                                <div class="flex text-yellow-400 mb-4">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 mb-6 italic">
+                                    "作为一家电商企业，数据分析对我们至关重要。这个平台提供的分析工具帮助我们深入了解客户行为，优化了我们的营销策略，销售额增长了35%。"
+                                </p>
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1011/100/100" alt="客户头像" class="w-12 h-12 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-bold text-dark">李娜</h4>
+                                        <p class="text-sm text-gray-500">某电商平台 营销总监</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评价 3 -->
+                        <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+                            <div class="bg-gray-50 rounded-xl p-8 h-full">
+                                <div class="flex text-yellow-400 mb-4">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                </div>
+                                <p class="text-gray-600 mb-6 italic">
+                                    "企业版方案为我们提供了全方位的安全保障和定制化服务，完全满足了我们的业务需求。系统稳定可靠，让我们能够专注于核心业务发展。"
+                                </p>
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1012/100/100" alt="客户头像" class="w-12 h-12 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-bold text-dark">王强</h4>
+                                        <p class="text-sm text-gray-500">某金融机构 技术总监</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 评价 4 -->
+                        <div class="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-4">
+                            <div class="bg-gray-50 rounded-xl p-8 h-full">
+                                <div class="flex text-yellow-400 mb-4">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <p class="text-gray-600 mb-6 italic">
+                                    "基础版方案对于我们小型团队来说性价比非常高，功能齐全，操作简单，帮助我们快速搭建了专业的企业网站，大大节省了我们的时间和成本。"
+                                </p>
+                                <div class="flex items-center">
+                                    <img src="https://picsum.photos/id/1013/100/100" alt="客户头像" class="w-12 h-12 rounded-full mr-4">
+                                    <div>
+                                        <h4 class="font-bold text-dark">陈静</h4>
+                                        <p class="text-sm text-gray-500">某初创公司 创始人</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 轮播控制按钮 -->
+                <button id="prev-testimonial" class="absolute top-1/2 left-0 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-700 hover:text-primary transition-custom z-10 md:-left-5">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+                <button id="next-testimonial" class="absolute top-1/2 right-0 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-700 hover:text-primary transition-custom z-10 md:-right-5">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+                
+                <!-- 轮播指示器 -->
+                <div class="flex justify-center mt-8 space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-primary testimonial-dot active" data-index="0"></button>
+                    <button class="w-3 h-3 rounded-full bg-gray-300 testimonial-dot" data-index="1"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12">
+                <div class="w-full lg:w-1/2">
+                    <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">联系我们</span>
+                    <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-6">
+                        随时为您提供帮助
+                    </h2>
+                    <p class="text-lg text-gray-600 mb-8">
+                        无论您有任何问题或需求，我们的团队都将竭诚为您服务。填写表单或通过以下方式联系我们，我们将尽快回复您。
+                    </p>
+                    
+                    <!-- 联系信息 -->
+                    <div class="space-y-6 mb-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-map-marker text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-dark mb-1">公司地址</h3>
+                                <p class="text-gray-600">北京市朝阳区建国路88号现代大厦15层</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-phone text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-dark mb-1">联系电话</h3>
+                                <p class="text-gray-600">400-123-4567</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-envelope text-primary text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-dark mb-1">电子邮箱</h3>
+                                <p class="text-gray-600">contact@modernui.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 社交媒体 -->
+                    <div>
+                        <h3 class="font-bold text-dark mb-4">关注我们</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-primary hover:text-white transition-custom">
+                                <i class="fa fa-weixin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-primary hover:text-white transition-custom">
+                                <i class="fa fa-weibo"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-primary hover:text-white transition-custom">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 hover:bg-primary hover:text-white transition-custom">
+                                <i class="fa fa-github"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 联系表单 -->
+                <div class="w-full lg:w-1/2">
+                    <div class="bg-white rounded-2xl shadow-lg p-8">
+                        <h3 class="text-xl font-bold text-dark mb-6">发送消息</h3>
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-gray-700 font-medium mb-2">姓名</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom" placeholder="请输入您的姓名">
+                                    <p class="hidden text-red-500 text-sm mt-1 error-message">请输入您的姓名</p>
+                                </div>
+                                
+                                <div>
+                                    <label for="email" class="block text-gray-700 font-medium mb-2">邮箱</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom" placeholder="请输入您的邮箱">
+                                    <p class="hidden text-red-500 text-sm mt-1 error-message">请输入有效的邮箱地址</p>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-gray-700 font-medium mb-2">主题</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom" placeholder="请输入消息主题">
+                                <p class="hidden text-red-500 text-sm mt-1 error-message">请输入消息主题</p>
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-gray-700 font-medium mb-2">消息内容</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom resize-none" placeholder="请输入您的消息内容"></textarea>
+                                <p class="hidden text-red-500 text-sm mt-1 error-message">请输入消息内容</p>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <input type="checkbox" id="privacy" name="privacy" class="mt-1">
+                                <label for="privacy" class="ml-2 text-gray-600 text-sm">
+                                    我同意贵公司的<a href="#" class="text-primary hover:underline">隐私政策</a>和<a href="#" class="text-primary hover:underline">服务条款</a>
+                                </label>
+                            </div>
+                            <p class="hidden text-red-500 text-sm error-message">请同意隐私政策和服务条款</p>
+                            
+                            <button type="submit" class="w-full py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom font-medium shadow-md hover:shadow-lg">
+                                发送消息 <i class="fa fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 订阅区域 -->
+    <section class="py-16 bg-primary relative overflow-hidden">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-white mb-4">
+                    订阅我们的新闻通讯
+                </h2>
+                <p class="text-white/80 mb-8">
+                    及时获取最新的产品更新、行业资讯和专属优惠。
+                </p>
+                <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                    <input type="email" placeholder="请输入您的邮箱地址" class="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/30 transition-custom">
+                    <button type="submit" class="px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-gray-100 transition-custom shadow-md">
+                        订阅
+                    </button>
+                </form>
+                <p class="text-white/60 text-sm mt-4">
+                    我们尊重您的隐私，不会向第三方分享您的信息。
+                </p>
+            </div>
+        </div>
+        
+        <!-- 背景装饰 -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10">
+            <div class="absolute top-10 left-10 w-40 h-40 rounded-full bg-white"></div>
+            <div class="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-white"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full bg-white"></div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white pt-16 pb-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+                <div class="lg:col-span-2">
+                    <a href="#" class="flex items-center space-x-2 mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">M</span>
+                        </div>
+                        <span class="text-xl font-bold text-white">ModernUI</span>
+                    </a>
+                    <p class="text-gray-400 mb-6 max-w-md">
+                        我们致力于为企业提供高品质的网站解决方案，帮助您在数字时代脱颖而出，实现业务增长。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-custom">
+                            <i class="fa fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-custom">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-custom">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-primary hover:text-white transition-custom">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6">产品</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">功能特性</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">价格方案</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">使用案例</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">更新日志</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">路线图</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6">资源</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">帮助中心</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">开发者文档</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">教程</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">博客</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">社区</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-6">公司</h3>
+                    <ul class="space-y-4">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">关于我们</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">联系我们</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">招贤纳士</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">隐私政策</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-custom">服务条款</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                        &copy; 2023 ModernUI. 保留所有权利。
+                    </p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">隐私政策</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">服务条款</a>
+                        <a href="#" class="text-gray-500 hover:text-gray-400 text-sm transition-custom">Cookie 政策</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 w-12 h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+        <i class="fa fa-chevron-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 100) {
+                navbar.classList.add('py-2', 'shadow-md');
+                navbar.classList.remove('py-4', 'shadow-sm');
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                navbar.classList.add('py-4', 'shadow-sm');
+                navbar.classList.remove('py-2', 'shadow-md');
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        // 移动端菜单切换
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            const icon = menuToggle.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            }
+        });
+        
+        // 返回顶部功能
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // 数字计数器动画
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+        
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(animateCounters, 1);
+                } else {
+                    counter.innerText = target;
+                }
+            });
+        };
+        
+        // 监听元素是否进入视口
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        const statsSection = document.getElementById('stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+        
+        // 价格切换
+        const pricingToggle = document.getElementById('pricing-toggle');
+        const priceValues = document.querySelectorAll('.price-value');
+        
+        pricingToggle.addEventListener('change', function() {
+            priceValues.forEach(price => {
+                if (this.checked) {
+                    price.textContent = price.getAttribute('data-annual');
+                } else {
+                    price.textContent = price.getAttribute('data-monthly');
+                }
+            });
+        });
+        
+        // 评价轮播
+        const slider = document.getElementById('testimonials-slider');
+        const prevBtn = document.getElementById('prev-testimonial');
+        const nextBtn = document.getElementById('next-testimonial');
+        const dots = document.querySelectorAll('.testimonial-dot');
+        let currentIndex = 0;
+        const totalSlides = Math.ceil(slider.children.length / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1));
+        
+        function updateSlider() {
+            const slideWidth = 100 / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1);
+            slider.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+            
+            // 更新指示器
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.classList.add('bg-primary');
+                    dot.classList.remove('bg-gray-300');
+                } else {
+                    dot.classList.remove('bg-primary');
+                    dot.classList.add('bg-gray-300');
+                }
+            });
+        }
+        
+        prevBtn.addEventListener('click', function() {
+            currentIndex = Math.max(currentIndex - 1, 0);
+            updateSlider();
+        });
+        
+        nextBtn.addEventListener('click', function() {
+            currentIndex = Math.min(currentIndex + 1, totalSlides - 1);
+            updateSlider();
+        });
+        
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentIndex = parseInt(this.getAttribute('data-index'));
+                updateSlider();
+            });
+        });
+        
+        // 窗口大小变化时重新计算轮播
+        window.addEventListener('resize', function() {
+            const newTotalSlides = Math.ceil(slider.children.length / (window.innerWidth >= 1024 ? 3 : window.innerWidth >= 768 ? 2 : 1));
+            if (newTotalSlides !== totalSlides) {
+                currentIndex = 0;
+                updateSlider();
+            }
+        });
+        
+        // 图表初始化
+        const ctx = document.getElementById('growthChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [
+                        {
+                            label: '客户数量',
+                            data: [650, 720, 810, 950, 1100, 1320, 1500, 1750, 1980, 2200, 2450, 2700],
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '销售额(万元)',
+                            data: [120, 150, 180, 220, 280, 320, 380, 420, 480, 550, 620, 700],
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 表单验证
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // 验证姓名
+                const name = document.getElementById('name');
+                const nameError = name.nextElementSibling;
+                if (!name.value.trim()) {
+                    nameError.classList.remove('hidden');
+                    name.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    nameError.classList.add('hidden');
+                    name.classList.remove('border-red-500');
+                }
+                
+                // 验证邮箱
+                const email = document.getElementById('email');
+                const emailError = email.nextElementSibling;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email.value.trim())) {
+                    emailError.classList.remove('hidden');
+                    email.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    emailError.classList.add('hidden');
+                    email.classList.remove('border-red-500');
+                }
+                
+                // 验证主题
+                const subject = document.getElementById('subject');
+                const subjectError = subject.nextElementSibling;
+                if (!subject.value.trim()) {
+                    subjectError.classList.remove('hidden');
+                    subject.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    subjectError.classList.add('hidden');
+                    subject.classList.remove('border-red-500');
+                }
+                
+                // 验证消息
+                const message = document.getElementById('message');
+                const messageError = message.nextElementSibling;
+                if (!message.value.trim()) {
+                    messageError.classList.remove('hidden');
+                    message.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    messageError.classList.add('hidden');
+                    message.classList.remove('border-red-500');
+                }
+                
+                // 验证隐私政策
+                const privacy = document.getElementById('privacy');
+                const privacyError = privacy.parentElement.nextElementSibling;
+                if (!privacy.checked) {
+                    privacyError.classList.remove('hidden');
+                    isValid = false;
+                } else {
+                    privacyError.classList.add('hidden');
+                }
+                
+                // 如果表单验证通过
+                if (isValid) {
+                    // 这里可以添加表单提交逻辑
+                    alert('表单提交成功！我们会尽快与您联系。');
+                    contactForm.reset();
+                }
+            });
+        }
+        
+        // 页面加载完成后的动画
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化轮播
+            updateSlider();
+            
+            // 添加淡入动画
+            const fadeElements = document.querySelectorAll('.animate-fade-in');
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+            });
+            
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        fadeObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(el => {
+                fadeObserver.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
